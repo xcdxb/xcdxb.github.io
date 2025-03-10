@@ -3,144 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小崔下载站</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
+    <title>注册示例</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        // 初始化 Supabase
         const supabaseUrl = 'https://mtceuatlkllejjrnwyvs.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Y2V1YXRsa2xsZWpqcm53eXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE2MTIyNjMsImV4cCI6MjA1NzE4ODI2M30.JYzOhlYcuePl9244AZHdpxbEpmjEVoaLslRF';
+        const supabaseKey = 'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10Y2V1YXRsa2xsZWpqcm53eXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE2MTIyNjMsImV4cCI6MjA1NzE4ODI2M30.JYzOhlYcuePl9244AZHdpxbEpmjEVoaLslRF-e6OZ-o';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         // 注册功能
         async function signUp(email, password) {
+            console.log('注册函数被调用');
+            console.log('邮箱:', email, '密码:', password);
+
             const { user, error } = await supabase.auth.signUp({ email, password });
             if (error) {
+                console.error('注册失败:', error);
                 alert('注册失败: ' + error.message);
             } else {
+                console.log('注册成功:', user);
                 alert('注册成功');
             }
         }
-
-        // 登录功能
-        async function signIn(email, password) {
-            const { user, error } = await supabase.auth.signIn({ email, password });
-            if (error) {
-                alert('登录失败: ' + error.message);
-            } else {
-                alert('登录成功');
-            }
-        }
-
-        // 更新积分显示
-        async function updatePointsDisplay(userId) {
-            const { data, error } = await supabase
-                .from('users')
-                .select('points')
-                .eq('id', userId)
-                .single();
-
-            if (!error) {
-                document.getElementById('points').textContent = `积分: ${data.points}`;
-            }
-        }
-
-        // 增加积分
-        async function addPoints(userId, points) {
-            const { data, error } = await supabase
-                .from('users')
-                .upsert({ id: userId, points }, { onConflict: 'id' });
-
-            if (!error) {
-                updatePointsDisplay(userId);
-            }
-        }
-
-        // 监听登录状态
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                // 用户已登录
-                document.getElementById('auth-section').style.display = 'none';
-                document.getElementById('downloads-section').style.display = 'block';
-                updatePointsDisplay(session.user.id);
-            } else {
-                // 用户未登录
-                document.getElementById('auth-section').style.display = 'block';
-                document.getElementById('downloads-section').style.display = 'none';
-            }
-        });
-
-        // 下载文件时增加积分
-        document.querySelectorAll('.download-item a').forEach(link => {
-            link.addEventListener('click', async (e) => {
-                const user = supabase.auth.user();
-                if (user) {
-                    e.preventDefault(); // 阻止默认跳转
-                    await addPoints(user.id, 10); // 每次下载增加 10 积分
-                    window.location.href = e.target.href; // 完成积分增加后跳转
-                }
-            });
-        });
     </script>
 </head>
 <body>
-    <header>
-        <h1>小崔下载站</h1>
-        <p>专为摸鱼而制作！</p>
-        <p>请问你想下载些什么呢？</p>
-    </header>
-
-    <!-- 登录和注册表单 -->
-    <section id="auth-section">
-        <h2>注册</h2>
-        <form id="register-form">
-            <input type="email" id="register-email" placeholder="邮箱" required>
-            <input type="password" id="register-password" placeholder="密码" required>
-            <button type="button" onclick="signUp(document.getElementById('register-email').value, document.getElementById('register-password').value)">注册</button>
-        </form>
-        <h2>登录</h2>
-        <form id="login-form">
-            <input type="email" id="login-email" placeholder="邮箱" required>
-            <input type="password" id="login-password" placeholder="密码" required>
-            <button type="button" onclick="signIn(document.getElementById('login-email').value, document.getElementById('login-password').value)">登录</button>
-        </form>
-    </section>
-
-    <!-- 下载内容（仅登录后显示） -->
-    <section class="downloads" id="downloads-section" style="display: none;">
-        <p id="points">积分: 0</p>
-        <article class="download-item">
-            <a href="https://registry.npmmirror.com/@muxunorg/mxorg-dl/1.11.0/files/mxfree.exe" target="_blank" rel="noopener noreferrer">
-                <img src="mxfree.png" alt="慕讯公益加速器" width="100" height="100" loading="lazy">
-                <h2>慕讯公益加速器</h2>
-                <p>或许你会在访问外国的什么东西的时候用到？</p>
-            </a>
-        </article>
-
-        <article class="download-item">
-            <a href="https://wwun.lanzn.com/i4Cwy2pwwgsb" target="_blank" rel="noopener noreferrer">
-                <img src="Roblox.png" alt="Roblox" width="100" height="100" loading="lazy">
-                <h2>Roblox</h2>
-                <p>一款外国游戏，需自己注册账号，需加速器<br>密码：00</p>
-            </a>
-        </article>
-
-        <article class="download-item">
-            <a href="https://cdn.bbsmc.net/bbsmc/data/YJBkhCZM/versions/IluTTCtp/Release%202.9.1.zip" target="_blank" rel="noopener noreferrer">
-                <img src="pcl.png" alt="PCL2" width="100" height="100" loading="lazy">
-                <h2>我的世界(PCL2启动器)</h2>
-                <p>请用离线模式，除非你有正版账号，正版需加速器，购买正版需要💰</p>
-            </a>
-        </article>
-
-        <article class="download-item">
-            <a href="https://wwun.lanzn.com/istlQ2q0z2ta" target="_blank" rel="noopener noreferrer">
-                <img src="KREDAgent.png" alt="Kill the REDAgent" width="100" height="100" loading="lazy">
-                <h2>干掉红蜘蛛</h2>
-                <p>气死信息科技老师系列～<br>密码：00</p>
-            </a>
-        </article>
-    </section>
+    <h1>注册</h1>
+    <form id="register-form" onsubmit="event.preventDefault(); signUp(document.getElementById('register-email').value, document.getElementById('register-password').value);">
+        <input type="email" id="register-email" placeholder="邮箱" required>
+        <input type="password" id="register-password" placeholder="密码" required>
+        <button type="submit">注册</button>
+    </form>
 </body>
 </html>
