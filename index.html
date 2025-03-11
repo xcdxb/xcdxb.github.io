@@ -3,35 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册示例</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseKey = 'YOUR_SUPABASE_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 注册功能
-        async function signUp(email, password) {
-            console.log('注册函数被调用');
-            console.log('邮箱:', email, '密码:', password);
-
-            const { user, error } = await supabase.auth.signUp({ email, password });
-            if (error) {
-                console.error('注册失败:', error);
-                alert('注册失败: ' + error.message);
-            } else {
-                console.log('注册成功:', user);
-                alert('注册成功');
-            }
-        }
-    </script>
+    <title>小崔下载站</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>注册</h1>
-    <form id="register-form" onsubmit="event.preventDefault(); signUp(document.getElementById('register-email').value, document.getElementById('register-password').value);">
-        <input type="email" id="register-email" placeholder="邮箱" required>
-        <input type="password" id="register-password" placeholder="密码" required>
-        <button type="submit">注册</button>
-    </form>
+    <header>
+        <h1>小崔下载站</h1>
+        <p>专为摸鱼而制作！</p>
+        <p>请问你想下载些什么呢？</p>
+    </header>
+
+    <section class="downloads">
+        <article class="download-item">
+            <a href="https://registry.npmmirror.com/@muxunorg/mxorg-dl/1.11.0/files/mxfree.exe" target="_blank" rel="noopener noreferrer">
+                <img src="mxfree.png" alt="慕讯公益加速器" width="100" height="100" loading="lazy">
+                <h2>慕讯公益加速器</h2>
+                <p>或许你会在访问外国的什么东西的时候用到？</p>
+            </a>
+        </article>
+
+        <article class="download-item">
+            <a href="https://wwun.lanzn.com/i4Cwy2pwwgsb" target="_blank" rel="noopener noreferrer">
+                <img src="Roblox.png" alt="Roblox" width="100" height="100" loading="lazy">
+                <h2>Roblox</h2>
+                <p>一款外国游戏，需自己注册账号，需加速器<br>密码：00</p>
+            </a>
+        </article>
+
+        <article class="download-item">
+            <a href="https://cdn.bbsmc.net/bbsmc/data/YJBkhCZM/versions/IluTTCtp/Release%202.9.1.zip" target="_blank" rel="noopener noreferrer">
+                <img src="pcl.png" alt="PCL2" width="100" height="100" loading="lazy">
+                <h2>我的世界(PCL2启动器)</h2>
+                <p>请用离线模式，除非你有正版账号，正版需加速器，购买正版需要💰</p>
+            </a>
+        </article>
+
+        <article class="download-item">
+            <a href="https://wwun.lanzn.com/istlQ2q0z2ta" target="_blank" rel="noopener noreferrer">
+                <img src="KREDAgent.png" alt="Kill the REDAgent" width="100" height="100" loading="lazy">
+                <h2>干掉红蜘蛛</h2>
+                <p>气死信息科技老师系列～<br>密码：00</p>
+            </a>
+        </article>
+    </section>
 </body>
 </html>
