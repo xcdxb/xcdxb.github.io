@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小崔聊天室</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background-color: #111;
+        }
+        #messages {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #000;
+            border-radius: 5px;
+        }
+        #messageForm {
+            display: flex;
+            gap: 10px;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 12px;
+            background: #222;
+            color: white;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .message {
+            margin: 12px 0;
+            padding: 10px;
+            background: #222;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+        }
+        .sender {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .time {
+            color: #888;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← 返回首页</a>
+
+    <header>
+        <h1>小崔聊天室</h1>
+        <p>与朋友实时聊天，消息自动保存</p>
+    </header>
+
+    <div class="chat-container">
+        <!-- 消息显示区域 -->
+        <div id="messages"></div>
+
+        <!-- 消息发送表单 -->
+        <form id="messageForm">
+            <input type="text" id="messageInput" placeholder="输入消息..." required>
+            <button type="submit">发送</button>
+        </form>
+    </div>
+
+    <!-- 引入 LeanCloud SDK -->
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@4.13.2/dist/av-min.js"></script>
+
+    <script>
+        AV.init({
+            appId: "oPRAva08BHoEeYTjZ6gEXIrt-MdYXbMMI",
+            appKey: "dMcovth9tIb5ErOhnifJYYeJ",
+            serverURL: "https://oprava08.api.lncldglobal.com"
+        });
+
+        // 获取DOM元素
+        const messageForm = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
+        const messagesDiv = document.getElementById('messages');
+
+        // 发送消息
+        messageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (text) {
+                // 创建 Message 对象
+                const Message = AV.Object.extend('Message');
+                const msg = new Message();
+
+                // 设置消息内容
+                await msg.save({
+                    text: text,
+                    sender: '用户' + Math.floor(Math.random() * 1000).toString().padStart(4, '0'),
+                    timestamp: new Date()
+                });
+
+                messageInput.value = '';
+            }
+        });
+
+        // 实时接收消息
+        const query = new AV.Query('Message');
+        query.descending('timestamp');
+        query.limit(50); // 只显示最近50条消息
+
+        // 首次加载历史消息
+        query.find().then((messages) => {
+            messages.reverse().forEach(showMessage);
+            scrollToBottom();
+        });
+
+        // 监听新消息
+        AV.Object.subscribe('Message', (msg) => {
+            showMessage(msg);
+            scrollToBottom();
+        });
+
+        // 显示单条消息
+        function showMessage(msg) {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.innerHTML = `
+                <span class="sender">${msg.get('sender')}</span>
+                <span>${msg.get('text')}</span>
+                <span class="time">${formatTime(msg.get('timestamp'))}</span>
+            `;
+            messagesDiv.appendChild(div);
+        }
+
+        // 时间格式化
+        function formatTime(date) {
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // 滚动到底部
+        function scrollToBottom() {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
