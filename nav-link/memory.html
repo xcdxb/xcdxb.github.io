@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元素周期表记忆工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #element {
+            font-size: 3.5rem;  /* 更大的字体 */
+            margin-bottom: 2rem;
+            text-align: center;
+            min-height: 5rem;
+        }
+        #answer {
+            padding: 1rem;
+            font-size: 1.5rem;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        #submit {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+        }
+        #submit:active {
+            background-color: #3e8e41;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div id="element"></div>
+    <input type="text" id="answer" placeholder="输入英文缩写" autocapitalize="off">
+    <button id="submit">提交</button>
+
+    <script>
+        const elements = [
+            ["氢", "H"],
+            ["氦", "He"],
+            ["锂", "Li"],
+            ["铍", "Be"],
+            ["硼", "B"],
+            ["碳", "C"],
+            ["氮", "N"],
+            ["氧", "O"],
+            ["氟", "F"],
+            ["氖", "Ne"],
+            ["钠", "Na"],
+            ["镁", "Mg"],
+            ["铝", "Al"],
+            ["硅", "Si"],
+            ["磷", "P"],
+            ["硫", "S"],
+            ["氯", "Cl"],
+            ["氩", "Ar"],
+            ["钾", "K"],
+            ["钙", "Ca"]
+        ];
+
+        let currentElement;
+
+        function showRandomElement() {
+            currentElement = elements[Math.floor(Math.random() * elements.length)];
+            document.getElementById("element").textContent = currentElement[0];
+            document.getElementById("answer").value = "";
+            document.getElementById("answer").focus();
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById("answer").value.trim();
+            if (userAnswer.toLowerCase() === currentElement[1].toLowerCase()) {
+                alert("✅ 正确！");
+            } else {
+                alert(`❌ 错误\n正确答案是：${currentElement[1]}`);
+            }
+            showRandomElement();
+        }
+
+        // 初始化
+        document.getElementById("submit").addEventListener("click", checkAnswer);
+        document.getElementById("answer").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") checkAnswer();
+        });
+        showRandomElement();
+    </script>
+</body>
+</html>
