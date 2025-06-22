@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>救救我的朋友</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', '微软雅黑', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.8s ease;
+        }
+
+        .heart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            transform: rotate(45deg);
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: rotate(45deg) translateY(0);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: rotate(45deg) translateY(-20px);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .initial-content {
+            display: block;
+        }
+
+        .prank-content {
+            display: none;
+        }
+
+        .message {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-yes {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(to right, #F44336, #FF9800);
+            color: white;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .friend-img {
+            width: 250px;
+            height: 320px;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            object-fit: cover;
+        }
+
+        .tenna-gif {
+            width: 250px;
+            height: 320px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: dance 2s infinite alternate;
+        }
+
+        @keyframes dance {
+            0% {
+                transform: translateY(0) rotate(0);
+            }
+
+            100% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .steam-container {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .steam-widget {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 646px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-top: 20px;
+            color: #ffcc00;
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .show-prank {
+            display: block;
+            animation: reveal 1s forwards;
+        }
+
+        @keyframes reveal {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .hide-initial {
+            display: none;
+        }
+
+        .music-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .image-container {
+                flex-direction: column;
+            }
+
+            .friend-img,
+            .tenna-gif {
+                width: 150px;
+                height: 200px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .message {
+                font-size: 1.4rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="heart-container" id="heartContainer"></div>
+
+    <div class="container">
+        <h1>救救我的朋友</h1>
+
+        <div class="initial-content" id="initialContent">
+            <div class="message">
+                我朋友得了心脏病，急需98RMB<br>你愿意救救我的朋友吗？
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-yes" id="yesBtn">是的我愿意</button>
+                <button class="btn btn-no" id="noBtn">吃大份去吧</button>
+            </div>
+        </div>
+
+        <div class="prank-content" id="prankContent">
+            <div class="image-container">
+                <img src="../png/helpmyfriend/tenna.gif" class="tenna-gif" alt="游戏动画">
+                <img src="../png/helpmyfriend/friend.jpg" class="friend-img" alt="朋友照片">
+                <img src="../png/helpmyfriend/tenna.gif" class="tenna-gif" alt="游戏动画">
+            </div>
+
+            <div class="steam-container">
+                <div class="steam-widget">
+                    <iframe src="https://store.steampowered.com/widget/1671210" frameborder="0" width="100%"
+                        height="190"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建漂浮的心形
+        function createHearts() {
+            const heartContainer = document.getElementById('heartContainer');
+            const heartCount = 30;
+
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+
+                // 随机位置
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 3;
+                const size = 10 + Math.random() * 20;
+
+                heart.style.left = `${posX}%`;
+                heart.style.top = `${posY}%`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+
+                heartContainer.appendChild(heart);
+            }
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function () {
+            createHearts();
+
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const initialContent = document.getElementById('initialContent');
+            const prankContent = document.getElementById('prankContent');
+
+            // 处理按钮点击
+            function handleButtonClick() {
+                initialContent.classList.add('hide-initial');
+                prankContent.classList.add('show-prank');
+
+                // 添加一些动画效果
+                document.body.style.background = 'linear-gradient(135deg, #6a11cb, #2575fc)';
+
+                // 移除按钮事件监听器
+                yesBtn.removeEventListener('click', handleButtonClick);
+                noBtn.removeEventListener('click', handleButtonClick);
+            }
+
+            yesBtn.addEventListener('click', handleButtonClick);
+            noBtn.addEventListener('click', handleButtonClick);
+        });
+    </script>
+</body>
+</html>
